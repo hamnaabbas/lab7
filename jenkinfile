@@ -1,0 +1,381 @@
+Ubuntu Deployment Practice Guide
+---------------------------------
+
+🧩 Task 1: Clone a Node.js Project and Deploy using PM2
+--------------------------------------------------------
+# 1. Install PM2
+sudo npm install -g pm2
+
+# 2. Clone Node.js project from GitHub
+git clone https://github.com/heroku/node-js-sample.git
+cd node-js-sample
+
+# 3. Install dependencies
+npm install
+
+# 4. Test locally
+npm start
+
+# 5. Run with PM2
+pm2 start index.js --name node-sample
+
+# 6. View running processes
+pm2 list
+
+# 7. Enable PM2 auto-start on reboot
+pm2 startup
+pm2 save
+
+--------------------------------------------------------
+⚛️ Task 2: Clone and Deploy React/Vite/Next.js App using Apache & Nginx
+--------------------------------------------------------
+
+# 1. Install Apache and Nginx
+sudo apt install apache2 nginx -y
+
+# 2. Clone React/Vite app
+cd ~
+git clone https://github.com/vitejs/vite.git react-app
+cd react-app
+
+# 3. Install dependencies and build
+npm install
+npm run build
+
+# 4. Deploy with Apache
+sudo rm -rf /var/www/html/*
+sudo cp -r dist/* /var/www/html/
+sudo systemctl restart apache2
+# Visit http://localhost
+
+# 5. Deploy with Nginx (optional)
+sudo rm -rf /var/www/html/*
+sudo cp -r dist/* /var/www/html/
+sudo nano /etc/nginx/sites-available/default
+# Replace contents with:
+# server {
+#     listen 80 default_server;
+#     root /var/www/html;
+#     index index.html;
+#     server_name _;
+#     location / {
+#         try_files $uri /index.html;
+#     }
+# }
+sudo systemctl restart nginx
+# Visit http://localhost
+
+--------------------------------------------------------
+⏰ Task 3: Schedule Cron Jobs
+--------------------------------------------------------
+
+# 1. Open crontab editor
+crontab -e
+
+# 2. Add the following lines:
+* * * * * date >> /home/$USER/cron_date.txt
+*/5 * * * * node /home/$USER/node-js-sample/index.js >> /home/$USER/cron_log.txt 2>&1
+0 1 * * * tar -czf /home/$USER/backup_$(date +\%F).tar.gz /home/$USER/react-app
+
+# 3. Verify jobs
+crontab -l
+
+# 4. Check output files
+cat /home/$USER/cron_date.txt
+
+--------------------------------------------------------
+🎯 Final Checklist
+--------------------------------------------------------
+✅ Node app deployed with PM2 → pm2 list
+✅ React/Vite app deployed → Visit http://localhost
+✅ Cron jobs scheduled → crontab -l
+
+--------------------------------
+Microservices
+--------------------------------
+
+⚙️ MICROservices Commands (Roman Urdu Mein)
+
+--------------------------------------------
+🏗️ SPRING BOOT MICROservice COMMANDS
+--------------------------------------------
+
+1️⃣ Naya Project Banana
+spring init --name=product-service --dependencies=web,data-jpa,mysql,actuator product-service
+cd product-service
+(Meaning: Naya Spring Boot project bana raha hai jiska naam product-service hai)
+
+2️⃣ Service Run Karna
+mvn spring-boot:run
+(Meaning: Spring Boot microservice ko run karne ka command)
+
+3️⃣ Build Karna (JAR File Banana)
+mvn clean package
+(Meaning: Code compile karke target folder mein .jar file banata hai)
+
+4️⃣ REST API Test Karna
+curl http://localhost:8080/products
+(Meaning: Terminal se API test karne ka command)
+
+--------------------------------------------
+🐳 DOCKER COMMANDS (Containerization)
+--------------------------------------------
+
+Dockerfile:
+FROM openjdk:17
+COPY target/product-service.jar app.jar
+ENTRYPOINT ["java","-jar","/app.jar"]
+
+1️⃣ Docker Image Banana
+docker build -t product-service .
+(Meaning: Docker image banata hai current directory se)
+
+2️⃣ Container Run Karna
+docker run -p 8080:8080 product-service
+(Meaning: Service ko Docker container ke andar run karta hai)
+
+3️⃣ Images aur Containers Check Karna
+docker images
+docker ps
+
+4️⃣ Container Stop/Delete Karna
+docker stop <container_id>
+docker rm <container_id>
+
+--------------------------------------------
+☸️ KUBERNETES COMMANDS (Deployment)
+--------------------------------------------
+
+1️⃣ Deployment Apply Karna
+kubectl apply -f deployment.yaml
+
+2️⃣ Pods Dekhna
+kubectl get pods
+
+3️⃣ Services Dekhna
+kubectl get services
+
+4️⃣ Pod Logs Dekhna
+kubectl logs <pod_name>
+
+5️⃣ Deployment Delete Karna
+kubectl delete -f deployment.yaml
+
+--------------------------------------------
+🌐 INTER-SERVICE COMMUNICATION
+--------------------------------------------
+
+Feign Client Example:
+@FeignClient(name = "order-service")
+public interface OrderClient {
+    @GetMapping("/orders")
+    List<Order> getOrders();
+}
+
+RestTemplate Example:
+@Autowired
+private RestTemplate restTemplate;
+
+String result = restTemplate.getForObject("http://localhost:8081/orders", String.class);
+
+--------------------------------------------
+🧾 GIT COMMANDS
+--------------------------------------------
+
+git init
+git add .
+git commit -m "initial commit"
+git push origin main
+
+--------------------------------------------
+💾 MYSQL COMMANDS
+--------------------------------------------
+
+mysql -u root -p
+CREATE DATABASE productdb;
+SHOW DATABASES;
+
+--------------------------------------------
+🧩 SPRING CLOUD (Discovery + Config)
+--------------------------------------------
+
+Eureka Server Run:
+mvn spring-boot:run
+
+Client Register in Eureka:
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://localhost:8761/eureka/
+
+--------------------------------------------
+📋 QUICK SUMMARY SHEET
+--------------------------------------------
+
+| Purpose | Command |
+|----------|----------|
+| Spring Project Create | spring init --name=service-name |
+| Run App | mvn spring-boot:run |
+| Build Jar | mvn clean package |
+| Test API | curl http://localhost:8080 |
+| Docker Build | docker build -t service-name . |
+| Docker Run | docker run -p 8080:8080 service-name |
+| See Pods | kubectl get pods |
+| See Services | kubectl get services |
+| Apply Deployment | kubectl apply -f file.yaml |
+| Delete Deployment | kubectl delete -f file.yaml |
+| View Logs | kubectl logs pod-name |
+
+--------------------------------------------
+🧠 TIP:
+Exam ke liye in commands ka flow yaad rakho:
+Create → Run → Build → Dockerize → Deploy (Kubernetes)
+--------------------------------------------
+Microservices MERN
+
+⚙️ MICROservices Commands (Roman Urdu Mein)
+
+--------------------------------------------
+🏗️ SPRING BOOT MICROservice COMMANDS
+--------------------------------------------
+
+1️⃣ Naya Project Banana
+spring init --name=product-service --dependencies=web,data-jpa,mysql,actuator product-service
+cd product-service
+(Meaning: Naya Spring Boot project bana raha hai jiska naam product-service hai)
+
+2️⃣ Service Run Karna
+mvn spring-boot:run
+(Meaning: Spring Boot microservice ko run karne ka command)
+
+3️⃣ Build Karna (JAR File Banana)
+mvn clean package
+(Meaning: Code compile karke target folder mein .jar file banata hai)
+
+4️⃣ REST API Test Karna
+curl http://localhost:8080/products
+(Meaning: Terminal se API test karne ka command)
+
+--------------------------------------------
+🐳 DOCKER COMMANDS (Containerization)
+--------------------------------------------
+
+Dockerfile:
+FROM openjdk:17
+COPY target/product-service.jar app.jar
+ENTRYPOINT ["java","-jar","/app.jar"]
+
+1️⃣ Docker Image Banana
+docker build -t product-service .
+(Meaning: Docker image banata hai current directory se)
+
+2️⃣ Container Run Karna
+docker run -p 8080:8080 product-service
+(Meaning: Service ko Docker container ke andar run karta hai)
+
+3️⃣ Images aur Containers Check Karna
+docker images
+docker ps
+
+4️⃣ Container Stop/Delete Karna
+docker stop <container_id>
+docker rm <container_id>
+
+--------------------------------------------
+☸️ KUBERNETES COMMANDS (Deployment)
+--------------------------------------------
+
+1️⃣ Deployment Apply Karna
+kubectl apply -f deployment.yaml
+
+2️⃣ Pods Dekhna
+kubectl get pods
+
+3️⃣ Services Dekhna
+kubectl get services
+
+4️⃣ Pod Logs Dekhna
+kubectl logs <pod_name>
+
+5️⃣ Deployment Delete Karna
+kubectl delete -f deployment.yaml
+
+--------------------------------------------
+🌐 INTER-SERVICE COMMUNICATION
+--------------------------------------------
+
+Feign Client Example:
+@FeignClient(name = "order-service")
+public interface OrderClient {
+    @GetMapping("/orders")
+    List<Order> getOrders();
+}
+
+RestTemplate Example:
+@Autowired
+private RestTemplate restTemplate;
+
+String result = restTemplate.getForObject("http://localhost:8081/orders", String.class);
+
+--------------------------------------------
+🧾 GIT COMMANDS
+--------------------------------------------
+
+git init
+git add .
+git commit -m "initial commit"
+git push origin main
+
+--------------------------------------------
+💾 MYSQL COMMANDS
+--------------------------------------------
+
+mysql -u root -p
+CREATE DATABASE productdb;
+SHOW DATABASES;
+
+--------------------------------------------
+🧩 SPRING CLOUD (Discovery + Config)
+--------------------------------------------
+
+Eureka Server Run:
+mvn spring-boot:run
+
+Client Register in Eureka:
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://localhost:8761/eureka/
+
+--------------------------------------------
+📋 QUICK SUMMARY SHEET
+--------------------------------------------
+
+| Purpose | Command |
+|----------|----------|
+| Spring Project Create | spring init --name=service-name |
+| Run App | mvn spring-boot:run |
+| Build Jar | mvn clean package |
+| Test API | curl http://localhost:8080 |
+| Docker Build | docker build -t service-name . |
+| Docker Run | docker run -p 8080:8080 service-name |
+| See Pods | kubectl get pods |
+| See Services | kubectl get services |
+| Apply Deployment | kubectl apply -f file.yaml |
+| Delete Deployment | kubectl delete -f file.yaml |
+| View Logs | kubectl logs pod-name |
+
+--------------------------------------------
+🧠 TIP:
+Exam ke liye in commands ka flow yaad rakho:
+Create → Run → Build → Dockerize → Deploy (Kubernetes)
+--------------------------------------------
+
+
+
+
+
+
+
+
+mic
