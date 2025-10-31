@@ -400,10 +400,180 @@ sudo systemctl restart mongod
 sudo systemctl status mongod --no-pager -l
 
 
+------------------------------------------
+github actions
+------------------------------------------
+==============================
+TASK 1 – EVENT PLANNING APP
+==============================
+
+# Phase 1: Repository Setup
+# 1. Fork the repository
+# URL: https://github.com/noorulain-nn/githubActionsLabTaskFolder.git
+
+# 2. Clone your forked repository
+git clone https://github.com/<your-username>/githubActionsLabTaskFolder.git
+cd githubActionsLabTaskFolder
+
+# 3. Install dependencies
+npm install
+
+# 4. Run tests locally
+npm test
+
+# (Expected Output: 1 passing, 1 failing)
+
+# 5. Check the test files and controller for errors
+#    - Open: tests/dateValidation.test.js
+#    - Open: controllers/Event.js
+
+# Phase 3: Create GitHub Actions Workflow
+mkdir -p .github/workflows
+cd .github/workflows
+touch ci.yml
+
+# Add the following content to ci.yml:
+# ------------------------------------
+# name: CI - Node.js Application Tests
+#
+# on: [push, pull_request]
+#
+# jobs:
+#   build:
+#     runs-on: ubuntu-latest
+#
+#     steps:
+#       - name: Checkout Repository
+#         uses: actions/checkout@v4
+#
+#       - name: Setup Node.js
+#         uses: actions/setup-node@v4
+#         with:
+#           node-version: 18
+#
+#       - name: Install Dependencies
+#         run: npm install
+#
+#       - name: Run Tests
+#         run: npm test
+# ------------------------------------
+
+# 6. Commit and push workflow
+git add .
+git commit -m "Add GitHub Actions CI workflow"
+git push origin main
+
+# 7. Verify pipeline in GitHub → Actions tab
+
+# 8. Fix the failing test
+#    Edit controllers/Event.js and correct date validation:
+#    Example fix:
+#    if (new Date(event.date) < new Date()) {
+#        throw new Error("Event date cannot be in the past!");
+#    }
+
+# 9. Test again locally
+npm test
+
+# 10. Commit and push the fix
+git add .
+git commit -m "Fix event date validation"
+git push origin main
+
+# 11. Verify pipeline success (green checkmark)
 
 
+==============================
+TASK 2 – TEMPERATURE CONVERTER APP
+==============================
 
+# 1. Create new folder for the project
+mkdir temp-converter
+cd temp-converter
 
+# 2. Initialize npm
+npm init -y
 
+# 3. Create converter.js
+touch converter.js
 
-mic
+# Add inside converter.js:
+# ------------------------------------
+# function celsiusToFahrenheit(c) {
+#   return (c * 9/5) + 32;
+# }
+#
+# function fahrenheitToCelsius(f) {
+#   return (f - 32) * 5/9;
+# }
+#
+# module.exports = { celsiusToFahrenheit, fahrenheitToCelsius };
+# ------------------------------------
+
+# 4. Create test.js
+touch test.js
+
+# Add inside test.js:
+# ------------------------------------
+# const { celsiusToFahrenheit, fahrenheitToCelsius } = require('./converter');
+#
+# function assertEqual(actual, expected, testName) {
+#   if (actual === expected) {
+#     console.log(`✅ Test Passed: ${testName}`);
+#   } else {
+#     console.error(`❌ Test Failed: ${testName} (Expected ${expected}, got ${actual})`);
+#   }
+# }
+#
+# assertEqual(celsiusToFahrenheit(0), 32, "0°C → 32°F");
+# assertEqual(celsiusToFahrenheit(100), 212, "100°C → 212°F");
+# assertEqual(fahrenheitToCelsius(212), 100, "212°F → 100°C");
+# ------------------------------------
+
+# 5. Update package.json test script
+# In "scripts" section, replace with:
+# "test": "node test.js"
+
+# 6. Run tests locally
+npm test
+
+# 7. Create GitHub Actions workflow folder
+mkdir -p .github/workflows
+cd .github/workflows
+touch test.yml
+
+# Add inside test.yml:
+# ------------------------------------
+# name: Temperature Converter Tests
+#
+# on: [push, pull_request]
+#
+# jobs:
+#   test:
+#     runs-on: ubuntu-latest
+#
+#     steps:
+#       - name: Checkout Code
+#         uses: actions/checkout@v4
+#
+#       - name: Setup Node.js
+#         uses: actions/setup-node@v4
+#         with:
+#           node-version: 18
+#
+#       - name: Install Dependencies
+#         run: npm install || true
+#
+#       - name: Run Tests
+#         run: npm test
+# ------------------------------------
+
+# 8. Commit and push workflow
+git add .
+git commit -m "Add GitHub Actions test workflow"
+git push origin main
+
+# 9. Verify pipeline on GitHub → Actions tab
+#  - First run should fail if test fails (❌)
+#  - After fixing, push again to get a green checkmark (✅)
+
