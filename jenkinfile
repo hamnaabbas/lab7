@@ -1,0 +1,123 @@
+🧱 Phase 1: Repository Setup
+🧭 Task 1.1 – Fork Repository
+
+Go to 👉 https://github.com/noorulain-nn/githubActionsLabTaskFolder.git
+
+Click Fork → select your GitHub account → wait till fork completes.
+
+📂 Task 1.2 – Explore Codebase
+
+Key files after forking:
+package.json              → defines npm scripts, test command
+controllers/Event.js       → core event validation logic
+tests/dateValidation.test.js → contains automated test cases
+Open each file and understand:
+
+How validateEvent() or similar function works in Event.js
+
+Which test is passing/failing under /tests/
+
+💻 Phase 2: Local Environment Setup
+⚙️ Task 2.1 – Clone and Install
+git clone https://github.com/<your-username>/githubActionsLabTaskFolder.git
+cd githubActionsLabTaskFolder
+npm install
+
+npm test
+✅ Expected Output:
+1 passing
+1 failing
+
+🧩 Task 2.3 – Analyze Failure
+
+Read the error message in terminal.
+
+Open tests/dateValidation.test.js → see which input triggers failure.
+
+Open controllers/Event.js → check logic (often date validation allows past dates).
+
+Note: “Expected future date but received past date accepted.”
+
+📝 Document finding:
+
+The validation logic incorrectly allows creation of events with past dates.
+
+⚙️ Phase 3: Implementing GitHub Actions
+🧰 Task 3.1 – Create Workflow
+mkdir -p .github/workflows
+touch .github/workflows/ci.yml
+
+add .yml file:
+name: CI - Node.js Application Tests
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Run tests
+        run: npm test
+
+
+deploy and verify:
+git add .
+git commit -m "Add GitHub Actions CI workflow"
+git push
+
+Then on GitHub:
+
+Go to Actions tab → workflow CI - Node.js Application Tests
+
+See steps run in real time
+
+Observe ❌ (failing) – same failure as local test (expected)
+✅ Task 4.3 – Verify Fix
+
+Run locally again:
+npm test
+
+git add .
+git commit -m "Fix date validation logic - all tests passing"
+git push
+
+Summery of key commands:
+# Clone
+git clone https://github.com/<your-username>/githubActionsLabTaskFolder.git
+cd githubActionsLabTaskFolder
+
+# Install & test locally
+npm install
+npm test
+
+# Create CI workflow
+mkdir -p .github/workflows
+nano .github/workflows/ci.yml   # (paste YAML)
+
+# Commit & push
+git add .
+git commit -m "Add CI workflow"
+git push
+
+# After fixing code
+npm test
+git add .
+git commit -m "Fix failing test"
+git push
+
+
