@@ -120,4 +120,25 @@ git add .
 git commit -m "Fix failing test"
 git push
 
+learnsphere/
+├─ course-service/
+│  ├─ package.json
+│  ├─ Dockerfile
+│  ├─ .env
+│  └─ src/
+│     └─ (routes, controllers, models)
+├─ student-service/
+│  ├─ package.json
+│  ├─ Dockerfile
+│  ├─ .env
+│  └─ src/
+├─ enrollment-service/
+│  ├─ package.json
+│  ├─ Dockerfile
+│  ├─ .env
+│  └─ src/
+├─ docker-compose.yml
+└─ infra/
+   └─ mongo-init/   (optional mongoimport JSON seed files)
+
 
